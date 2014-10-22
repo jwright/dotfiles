@@ -1,6 +1,6 @@
 [user]
-  name = Keith Thompson
-  email = keith@brilliantfantastic.com
+  name = Jamie Wright
+  email = jamie@brilliantfantastic.com
 [core]
   editor = vim
   excludesfile = ~/.gitignore_global
