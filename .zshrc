@@ -69,6 +69,7 @@ alias attach='tmux attach-session -t'
 alias switch='tmux switch-session -t'
 alias tmk='tmux kill-session -t'
 alias tls='tmux ls'
+alias start='tmuxinator start'
 
 # Server fanciness with python
 alias server='open http://localhost:1337/ && python -m SimpleHTTPServer 1337'
