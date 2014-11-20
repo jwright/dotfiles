@@ -20,7 +20,7 @@ export PATH=/Applications/Postgres93.app/Contents/MacOS/bin:$PATH
 export PATH=/usr/local/share/npm/bin:$PATH
 
 # Configure GOPATH and add go/bin to Path
-export GOPATH=$HOME/code/go
+export GOPATH=$HOME/projects/go
 export PATH=$GOPATH/bin:$PATH
 
 # Add GOROOT to PATH for access to godoc
@@ -37,7 +37,7 @@ export NODE_PATH=$NODE_PATH:/usr/local/share/npm/lib/node_modules
 ###########
 
 # Dotfiles
-alias dot='cd ~/code/github-projects/dotfiles'
+alias dot='cd ~/projects/dotfiles'
 
 # Brew casks
 alias casks='open /opt/homebrew-cask/Caskroom'
@@ -62,7 +62,7 @@ alias gcob='git checkout -b'
 alias grpr='git remote prune origin'
 
 # Gitignores
-alias objc-ignore='cp ~/code/github-projects/gitignore/Objective-C.gitignore .gitignore'
+alias objc-ignore='cp ~/projects/gitignore/Objective-C.gitignore .gitignore'
 
 # tmux
 alias attach='tmux attach-session -t'
