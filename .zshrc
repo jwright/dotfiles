@@ -30,8 +30,17 @@ export PATH=$PATH:/usr/local/Cellar/go/1.2/libexec/bin
 source /usr/local/share/chruby/chruby.sh
 source /usr/local/share/chruby/auto.sh
 
+# Setup web
+export PORT=5000
+
+# Setup MONGO
+export MONGO_PATH=/data/db
+
 # Setup NODE_PATH
 export NODE_PATH=$NODE_PATH:/usr/local/share/npm/lib/node_modules
+
+# Setup REDIS
+export REDIS_PORT=6379
 
 # ALIASES #
 ###########
@@ -60,6 +69,7 @@ alias gca='git commit -am'
 alias gco='git checkout'
 alias gcob='git checkout -b'
 alias grpr='git remote prune origin'
+alias grc='git rebase --continue'
 
 # Gitignores
 alias objc-ignore='cp ~/projects/gitignore/Objective-C.gitignore .gitignore'
