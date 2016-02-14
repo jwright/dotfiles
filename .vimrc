@@ -124,6 +124,8 @@ let g:ctrlp_switch_buffer = 0
 let g:ctrlp_working_path_mode = 0
 " Use ag for the searching so that it's not so slow
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+" Ignore front end shit
+let g:ctrlp_custom_ignore = 'node_modules\|bower_components\|tmp\|DS_Store\|git'
 " }}}
 
 " Auto-complete {{{
@@ -168,6 +170,20 @@ function! RenameFile()
   endif
 endfunction
 map <leader>n :call RenameFile()<cr>
+
+" MARK CURRENT FILE FOR TESTING
+function! BindWithCLI(key, cli)
+  let key = a:key
+  let cli = a:cli
+  let file_name = expand('%')
+  let command = " :!" . cli . " " . file_name
+  exec "map " . key . command . "<cr>"
+  exec command
+endfunction
+
+map gr :call BindWithCLI("<leader>t", "bundle exec rspec")<cr>
+map gc :call BindWithCLI("<leader>t", "bundle exec cucumber")<cr>
+
 " }}}
 
 " Testing Functions {{{
