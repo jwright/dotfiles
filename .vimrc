@@ -7,8 +7,9 @@ call pathogen#helptags()
 " }}}
 
 " Colors {{{
+let base16colorspace=256  " Access colors present in 256 colorspace
 set t_Co=256                        " set number of colors
-colorscheme Tomorrow-Night-Eighties " Use Tomorrow-Night Theme
+colorscheme base16-tomorrow-night " Use base 16 color scheme
 " }}}
 
 " Leader & General Commands {{{
