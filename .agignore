@@ -3,6 +3,12 @@
 *.sw[op]
 *.pyc
 
+# Elixir projects #
+###################
+_build
+deps
+node_modules
+
 # Compiled source #
 ###################
 *.com
