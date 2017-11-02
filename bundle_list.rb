@@ -28,6 +28,9 @@ $git_bundles = [
   "https://github.com/wting/rust.vim.git",
   "https://github.com/vim-scripts/VimClojure.git",
   "https://github.com/jnwhiteh/vim-golang.git",
+
+  # Themes
+  "https://github.com/dracula/vim.git",
 ]
 
 $vim_colors = [

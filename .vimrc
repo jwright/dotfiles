@@ -9,7 +9,7 @@ call pathogen#helptags()
 " Colors {{{
 let base16colorspace=256  " Access colors present in 256 colorspace
 set t_Co=256                        " set number of colors
-colorscheme base16-tomorrow-night " Use base 16 color scheme
+colorscheme dracula
 " }}}
 
 " Leader & General Commands {{{
