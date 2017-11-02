@@ -97,6 +97,9 @@ alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/
 # Flush DNS Cache
 alias dnsflush='dscacheutil -flushcache; sudo killall -HUP mDNSResponder'
 
+# Tatsu
+alias tatsu='heroku run rake console -a tatsu-production'
+
 # ZSH CONFIGURATION #
 #####################
 
@@ -137,6 +140,9 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:
 #################################
 
 # Colors
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
 autoload -U colors && colors
 setopt prompt_subst
 
