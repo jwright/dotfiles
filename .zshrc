@@ -38,6 +38,8 @@ export MONGO_PATH=/data/db
 
 # Setup NODE_PATH
 export NODE_PATH=$NODE_PATH:/usr/local/share/npm/lib/node_modules
+export NVM_DIR="$HOME/.nvm"
+  . "/usr/local/opt/nvm/nvm.sh"
 
 # Setup REDIS
 export REDIS_PORT=6379
@@ -64,7 +66,8 @@ alias be="bundle exec"
 alias g='git status -s'
 alias gb='git branch'
 alias gc='git commit -m'
-alias gp='git pr'
+alias gp='git push'
+alias gpr='git pr'
 alias gca='git commit -am'
 alias gco='git checkout'
 alias gcob='git checkout -b'
