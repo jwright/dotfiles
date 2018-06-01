@@ -15,7 +15,7 @@ export RUBY_GC_HEAP_FREE_SLOTS=200000
 
 # Add sbin, Homebrew, Postgres.app, and NPM related directories to path
 export PATH=/sbin:$PATH
-export PATH=/usr/local/bin:$PATH
+export PATH=/usr/local/bin:$HOME/bin:$PATH
 export PATH=/Applications/Postgres93.app/Contents/MacOS/bin:$PATH
 export PATH=/usr/local/share/npm/bin:$PATH
 
@@ -76,6 +76,9 @@ alias grc='git rebase --continue'
 
 # Gitignores
 alias objc-ignore='cp ~/projects/gitignore/Objective-C.gitignore .gitignore'
+
+# ngrok
+alias ngrok='/Applications/ngrok'
 
 # tmux
 alias attach='tmux attach-session -t'
@@ -150,7 +153,7 @@ autoload -U colors && colors
 setopt prompt_subst
 
 # Set default ruby
-chruby 2.1
+chruby 2.4
 
 # Display Virtualenv cleanly in right column
 function virtualenv_info {
@@ -184,3 +187,4 @@ RPROMPT='%{$fg[cyan]%}$(virtualenv_info)%{$fg[white]%}$(ruby_info)$(prompt_char)
 export PATH="/usr/local/heroku/bin:$PATH"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
