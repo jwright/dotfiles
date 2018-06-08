@@ -23,6 +23,10 @@ end
 
 desc 'Update Vim bundles'
 task :vim do
+  # Install Vim Plug to manage bundles
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
   # Grab newest version of all bundles
   bundles_dir = File.join(File.dirname(__FILE__), '.vim/bundle')
 

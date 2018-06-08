@@ -1,6 +1,7 @@
 .DS_Store
 *.swp
 *.un~
+.vim/autoload
 .vim/bundle
 .vim/colors
 .rbenv-version
