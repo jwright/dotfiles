@@ -4,4 +4,5 @@
 .vim/autoload
 .vim/bundle
 .vim/colors
+.vim/plugged
 .rbenv-version

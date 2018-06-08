@@ -1,4 +1,17 @@
-" Keith Thompson
+" Jamie Wright
+
+" vim-plug {{{
+call plug#begin('~/.vim/plugged')
+
+" Running test files
+
+Plug 'janko-m/vim-test'
+
+" Initialize plugin system
+
+call plug#end()
+
+" }}}
 
 " Pathogen {{{
 runtime bundle/vim-pathogen/autoload/pathogen.vim
@@ -188,89 +201,15 @@ map gc :call BindWithCLI("<leader>t", "bundle exec cucumber")<cr>
 " }}}
 
 " Testing Functions {{{
-" SWITCH BETWEEN TEST AND PRODUCTION CODE
-function! OpenTestAlternate()
-  let new_file = AlternateForCurrentFile()
-  exec ':e ' . new_file
-endfunction
-function! AlternateForCurrentFile()
-  let current_file = expand("%")
-  let new_file = currenct_file
-  let in_spec = match(current_file, '^spec/') != -1
-  let going_to_spec = !in_spec
-  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') != -1
-  if going_to_spec
-    if in_app
-      let new_file = substitute(new_file, '^app/', '', '')
-    end
-    let new_file = substitute(new_file, '\.rb$', '_spec.rb', '')
-    let new_file = 'spec/' . new_file
-  else
-    let new_file = substitute(new_file, '_spec\.rb$', '.rb', '')
-    let new_file = substitute(new_file, '^spec/', '', '')
-    if in_app
-      let new_file = 'app/' . new_file
-    end
-  endif
-  return new_file
-endfunction
-nnoremap <leader>. :call OpenTestAlternate()<cr>
 
-" RUN TESTS
-function! RunTests(filename)
-  " Write the file and run tests for the given filename
-  :w
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-  if match(a:filename, '\.feature$') != -1
-    if filereadable("script/features")
-      exec ":!script/features " . a:filename
-    elseif filereadable("Gemfile")
-      exec ":!bundle exec cucumber " . a:filename
-    else
-      exec ":!cucumber " . a:filename
-    end
-  else
-    if filereadable("script/test")
-      exec ":!script/test " . a:filename
-    elseif filereadable("Gemfile")
-      exec ":!bundle exec ruby ". a:filename
-    else
-      exec ":!ruby " . a:filename
-    end
-  end
-endfunction
+" Add hotkeys for vim-test
 
-function! SetTestFile()
-  " Set the spec file that tests will be run for.
-  let t:grb_test_file=@%
-endfunction
+nmap <silent> <leader>t :TestFile<CR>
+nmap <silent> <leader>T :TestNearest<CR>
+nmap <silent> <leader>a :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>
 
-function! RunTestFile(...)
-  if a:0
-    let command_suffix = a:1
-  else
-    let command_suffix = ""
-  endif
-
-  " Run the test for the previously-marked file.
-  let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\)$') != -1
-  if in_test_file
-    call SetTestFile()
-  elseif !exists("t:grb_test_file")
-    return
-  end
-  call RunTests(t:grb_test_file . command_suffix)
-endfunction
-
-" Running Ruby & Cucumber Tests
-map <leader>a :call RunTests('')<cr>
-map <leader>t :call RunTestFile()<cr>
-map <leader>c :!bundle exec cucumber<cr>
 " }}}
 
 " Auto-commands {{{
