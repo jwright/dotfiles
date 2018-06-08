@@ -11,6 +11,12 @@ Plug 'janko-m/vim-test'
 
 Plug 'mhinz/vim-mix-format'
 
+" Create pretty code screenshots
+" Select some text in visual mode and run this command:
+" :CarbonNowSh
+
+Plug 'kristijanhusak/vim-carbon-now-sh'
+
 " Initialize plugin system
 
 call plug#end()
@@ -167,6 +173,10 @@ inoremap <s-tab> <c-n>
 let g:mix_format_on_save = 1
 " }}}
 
+" vim-carbon-now-sh {{{
+let g:carbon_now_sh_options = 't=dracula'
+" }}}
+
 " Functions {{{
 " Function for removing trailing white space on save
 function! <SID>StripTrailingWhitespaces()
@@ -253,5 +263,7 @@ if has("autocmd")
   autocmd FileType go map <buffer> <leader>r :w \|:!go run %<cr>
 endif
 " }}}
+
+
 
 " vim:foldmethod=marker:foldlevel=0
