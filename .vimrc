@@ -7,6 +7,10 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'janko-m/vim-test'
 
+" Elixir  formatting
+
+Plug 'mhinz/vim-mix-format'
+
 " Initialize plugin system
 
 call plug#end()
@@ -157,6 +161,10 @@ endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 " open wildmenu with Shift+Tab
 inoremap <s-tab> <c-n>
+" }}}
+
+" mix-format {{{
+let g:mix_format_on_save = 1
 " }}}
 
 " Functions {{{
