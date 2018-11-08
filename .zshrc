@@ -26,6 +26,9 @@ export PATH=$GOPATH/bin:$PATH
 # Add GOROOT to PATH for access to godoc
 export PATH=$PATH:/usr/local/Cellar/go/1.2/libexec/bin
 
+# Add fucking PHP Composer
+export PATH=$HOME/.composer/vendor/bin:$PATH
+
 # Configure chruby
 source /usr/local/share/chruby/chruby.sh
 source /usr/local/share/chruby/auto.sh
@@ -153,7 +156,7 @@ autoload -U colors && colors
 setopt prompt_subst
 
 # Set default ruby
-chruby 2.4
+chruby 2.5
 
 # Display Virtualenv cleanly in right column
 function virtualenv_info {
@@ -188,3 +191,4 @@ export PATH="/usr/local/heroku/bin:$PATH"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
