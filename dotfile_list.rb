@@ -1,0 +1,21 @@
+# The list of dotfile you would like linked
+$dotfiles = [
+  ".agignore",
+  ".bashrc",
+  "bin",
+  ".ctags",
+  ".gemrc",
+  ".gitconfig",
+  ".githelpers",
+  ".gitignore_global",
+  ".irbrc",
+  ".jshintrc",
+  ".pryrc",
+  ".railsrc",
+  ".tmux.conf",
+  ".vim",
+  ".vimrc",
+  ".xvimrc",
+  ".zprofile",
+  ".zshrc",
+]
