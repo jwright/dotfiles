@@ -29,6 +29,7 @@ phase you're stuck on.
 | 4 | Sign in to the 1Password account | **no — by hand** |
 | 5 | SSH agent socket, git commit signing | yes |
 | 6 | `git clone` this repo, `brew bundle` | yes |
+| 7 | `rake link` — symlink the dotfiles into `$HOME` | yes |
 
 Phase 4 is the only real gate. A new device needs the Secret Key, which lives in
 the Emergency Kit or in a setup QR code shown by a device already signed in.

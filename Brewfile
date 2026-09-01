@@ -1,5 +1,5 @@
 # Everything downstream of a working 1Password.
-# Run with: brew bundle --file=~/src/dotfiles/Brewfile
+# Run with: brew bundle --file=~/Projects/dotfiles/Brewfile
 
 tap "1password/tap"
 

@@ -164,7 +164,7 @@ fi
 # ---------------------------------------------------------------------------
 
 log "dotfiles"
-DOTFILES="$HOME/src/dotfiles"
+DOTFILES="$HOME/Projects/dotfiles"
 if [[ -d "$DOTFILES" ]]; then
   ok "already cloned"
 elif $VERIFY_ONLY; then
@@ -180,6 +180,32 @@ if [[ -f "$DOTFILES/Brewfile" ]] && ! $VERIFY_ONLY; then
   log "brew bundle"
   brew bundle --file="$DOTFILES/Brewfile"
   ok "everything else installed"
+fi
+
+# ---------------------------------------------------------------------------
+# phase 7 — link the dotfiles into $HOME
+# ---------------------------------------------------------------------------
+
+log "dotfile symlinks"
+
+# "done" means $HOME/.zshrc is a symlink pointing back into the repo.
+links_done() {
+  [[ -L "$HOME/.zshrc" && "$(readlink "$HOME/.zshrc")" == "$DOTFILES"/* ]]
+}
+
+if links_done; then
+  ok "already linked into $DOTFILES"
+elif $VERIFY_ONLY; then
+  fail "not linked"
+elif [[ ! -f "$DOTFILES/Rakefile" ]]; then
+  todo "no Rakefile in $DOTFILES, skipping"
+elif ! have rake; then
+  fail "rake not found; run 'rake link' in $DOTFILES by hand"
+else
+  # Note: rake link replaces whatever sits at each target, including real
+  # files. That is what you want on a fresh Mac and worth a look anywhere else.
+  ( cd "$DOTFILES" && rake link )
+  ok "linked into $HOME"
 fi
 
 echo
