@@ -12,6 +12,8 @@
 
 set -euo pipefail
 
+SELF_URL="https://raw.githubusercontent.com/jwright/dotfiles/main/bootstrap.sh"
+
 VERIFY_ONLY=false
 [[ "${1:-}" == "--verify" ]] && VERIFY_ONLY=true
 
@@ -54,6 +56,8 @@ if clt_present; then
   ok "already installed"
 elif $VERIFY_ONLY; then
   fail "missing"
+elif [[ "${SKIP_SYSTEM:-false}" == true ]]; then
+  todo "SKIP_SYSTEM set, not installing"
 else
   # Non-blocking: opens the GUI installer, then we wait it out.
   xcode-select --install 2>/dev/null || true
@@ -74,6 +78,8 @@ if brew_present; then
   ok "$(brew --version | head -1)"
 elif $VERIFY_ONLY; then
   fail "missing"
+elif [[ "${SKIP_SYSTEM:-false}" == true ]]; then
+  todo "SKIP_SYSTEM set, not installing"
 else
   # This prompts once for sudo. It is the only credential prompt we can't dodge.
   NONINTERACTIVE=1 /bin/bash -c \
@@ -90,12 +96,18 @@ log "1Password"
 for cask in 1password 1password-cli; do
   if cask_present "$cask"; then
     ok "$cask present"
+  elif [[ "$cask" == 1password ]] && app_present "1Password"; then
+    ok "1Password present (installed outside brew)"
   elif $VERIFY_ONLY; then
     fail "$cask missing"
   else
     # 1password-cli ships as a pkg and will ask for sudo here.
-    brew install --cask "$cask"
-    ok "$cask installed"
+    if [[ "${SKIP_SYSTEM:-false}" == true ]]; then
+      todo "SKIP_SYSTEM set, not installing $cask"
+    else
+      brew install --cask "$cask"
+      ok "$cask installed"
+    fi
   fi
 done
 
@@ -106,7 +118,11 @@ have op && ok "op $(op --version)"
 # ---------------------------------------------------------------------------
 
 log "1Password account"
-if op_signed_in; then
+# ASSUME_SIGNED_IN is a test hook: op keeps its account state under $HOME, so a
+# sandboxed $HOME can never pass this gate and phases 5-7 would never run.
+if [[ "${ASSUME_SIGNED_IN:-false}" == true ]]; then
+  ok "ASSUME_SIGNED_IN set, treating the gate as passed"
+elif op_signed_in; then
   ok "signed in: $(op account list --format=json 2>/dev/null | grep -o '"url":"[^"]*"' | head -1)"
 else
   todo "sign in manually — this part is deliberately not scriptable:"
@@ -117,7 +133,14 @@ else
   todo "  5. Settings > Developer -> enable CLI integration + SSH agent"
   app_present "1Password" && ! $VERIFY_ONLY && open -a 1Password
   echo
-  todo "re-run './bootstrap.sh --verify' once that's done."
+  # Piped through curl there is no local copy to re-run, and the repo is not
+  # cloned until phase 6 — so name whichever invocation actually works.
+  if [[ -f "${BASH_SOURCE[0]:-}" ]]; then
+    todo "re-run '${BASH_SOURCE[0]} --verify' once that's done."
+  else
+    todo "re-run once that's done:"
+    todo "  curl -fsSL $SELF_URL | bash -s -- --verify"
+  fi
   exit 0
 fi
 
@@ -164,7 +187,7 @@ fi
 # ---------------------------------------------------------------------------
 
 log "dotfiles"
-DOTFILES="$HOME/Projects/dotfiles"
+DOTFILES="${DOTFILES:-$HOME/Projects/dotfiles}"
 if [[ -d "$DOTFILES" ]]; then
   ok "already cloned"
 elif $VERIFY_ONLY; then
@@ -177,9 +200,13 @@ else
 fi
 
 if [[ -f "$DOTFILES/Brewfile" ]] && ! $VERIFY_ONLY; then
-  log "brew bundle"
-  brew bundle --file="$DOTFILES/Brewfile"
-  ok "everything else installed"
+  if [[ "${SKIP_BUNDLE:-false}" == true ]]; then
+    todo "SKIP_BUNDLE set, not running brew bundle"
+  else
+    log "brew bundle"
+    brew bundle --file="$DOTFILES/Brewfile"
+    ok "everything else installed"
+  fi
 fi
 
 # ---------------------------------------------------------------------------
