@@ -5,19 +5,91 @@ that a brand-new Mac with no credentials on it can fetch and run this.
 
 ## New machine
 
+### Before you start
+
+Two things the script cannot get for you:
+
+- **A way into 1Password.** Either another device already signed in (it shows a
+  setup QR code under Settings → Accounts → Set Up Another Device) or the
+  Emergency Kit with the Secret Key.
+- **Your SSH key already in 1Password, with the public half on GitHub.** Phase 6
+  clones over SSH, so a key that GitHub has never seen will fail there.
+
+Nothing else. No files copied over, no credentials on disk.
+
+### 1. Open Terminal and run it
+
+Use the stock **Terminal.app** — Ghostty arrives later, in `brew bundle`.
+
 ```sh
 curl -fsSL https://raw.githubusercontent.com/jwright/dotfiles/main/bootstrap.sh | bash
 ```
 
-That gets you to a working 1Password, at which point you sign in by hand (once),
-flip two toggles, and re-run:
+That covers phases 1-3 and will ask for your **login password twice**: once for
+Homebrew, once for the `1password-cli` pkg. The Xcode command line tools open
+Apple's GUI installer; the script polls every 20 seconds and waits it out, so
+leave it running.
+
+It then stops on purpose at phase 4 and prints what to do.
+
+### 2. Sign in to 1Password by hand
+
+This is the one gate, and it is deliberately not scriptable:
+
+1. `open -a 1Password` (the script does this for you)
+2. On a device already signed in: Settings → Accounts → **Set Up Another Device**
+3. Scan the QR code, enter your master password
+4. Settings → Security → enable **Touch ID**
+5. Settings → Developer → enable **CLI integration** and **the SSH agent**
+
+Step 5 is what makes everything after this work. Without the SSH agent, phase 6
+cannot clone.
+
+### 3. Check where you stand
 
 ```sh
-./bootstrap.sh --verify
+curl -fsSL https://raw.githubusercontent.com/jwright/dotfiles/main/bootstrap.sh | bash -s -- --verify
 ```
 
-`--verify` runs every assertion without changing anything, so it tells you which
-phase you're stuck on.
+`--verify` only asserts — it changes nothing and continues nothing. Use it to see
+which phase you are stuck on. Every line should read `ok` down to phase 5.
+
+### 4. Run it again to finish
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/jwright/dotfiles/main/bootstrap.sh | bash
+```
+
+Same command as step 1. Every phase asserts before acting, so the finished work
+is skipped and it picks up at phase 5: ssh config, git signing, clone into
+`~/Projects/dotfiles`, `brew bundle`, then `rake link`.
+
+`brew bundle` is the slow part. Once it finishes, open a new shell — `$HOME` is
+now symlinked to the repo.
+
+### 5. Confirm
+
+```sh
+readlink ~/.zshrc                 # -> ~/Projects/dotfiles/.zshrc
+git -C ~/Projects/dotfiles status # should be clean; see Known issues if not
+```
+
+### Known issues
+
+**Git commit signing does not survive the run.** Phase 5 writes `gpg.format`,
+`gpg.ssh.program` and `commit.gpgsign` into `~/.gitconfig`; phase 7 then replaces
+that file with a symlink to the repo's copy, which has none of them. So signing
+is silently off when the run ends. Check with:
+
+```sh
+git config --global --get commit.gpgsign
+```
+
+Related: once `~/.gitconfig` is a symlink, any `git config --global` writes
+*through* it into the repo's tracked file. If `git status` in the repo is dirty
+after a run, that is why — check before committing, so a local path does not end
+up in a public repo. The fix is to move machine-specific git config into an
+included `~/.gitconfig.local`, which is not done yet.
 
 ## What it does
 
