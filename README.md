@@ -38,7 +38,7 @@ you which phase you are stuck on.
 
 ```sh
 readlink ~/.zshrc                 # -> ~/Projects/dotfiles/.zshrc
-git -C ~/Projects/dotfiles status # should be clean; see Known issues if not
+git -C ~/Projects/dotfiles status # clean: nothing writes to the tracked files
 ```
 
 ## What it does
@@ -121,22 +121,32 @@ tart delete scratch                          # reset
 Keep `base` pristine and always test in a clone of it — that makes reset a delete
 rather than an uninstall. Note the base image is tens of GB.
 
-## Known issues
+## Machine-specific git config
 
-**Git commit signing does not survive the run.** Phase 6 writes `gpg.format`,
-`gpg.ssh.program` and `commit.gpgsign` into `~/.gitconfig`; phase 8 then replaces
-that file with a symlink to the repo's copy, which has none of them. So signing
-is silently off when the run ends. Check with:
+`.gitconfig` ends with an include:
 
-```sh
-git config --global --get commit.gpgsign
+```
+[include]
+	path = ~/.gitconfig.local
 ```
 
-Related: once `~/.gitconfig` is a symlink, any `git config --global` writes
-*through* it into the repo's tracked file. If `git status` in the repo is dirty
-after a run, that is why — check before committing, so a local path does not end
-up in a public repo. The fix is to move machine-specific git config into an
-included `~/.gitconfig.local`, which is not done yet.
+Anything specific to one machine goes in that file, which is never committed and
+never linked. `bootstrap.sh` writes the 1Password signing config there for two
+reasons:
+
+- `~/.gitconfig` is a symlink into this repo, so `git config --global` would
+  follow it and edit the tracked file
+- `rake link` replaces `~/.gitconfig` wholesale, so anything written to it
+  directly is gone on the next run
+
+A missing `~/.gitconfig.local` is fine; git ignores an include it cannot find.
+
+One trap worth knowing: `git config --global --get` leaves includes **unread**, so
+it will not show these values. Use `--includes`:
+
+```sh
+git config --global --includes --get commit.gpgsign
+```
 
 ## Nothing secret goes here
 

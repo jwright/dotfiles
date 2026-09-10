@@ -45,3 +45,8 @@
 	required = true
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
+# Machine-specific settings live here, not in this file. Written by bootstrap.sh
+# (git signing via 1Password) and never committed. Missing is fine — git ignores
+# an include it cannot find. Last, so local values win.
+[include]
+	path = ~/.gitconfig.local

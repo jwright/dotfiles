@@ -246,15 +246,25 @@ EOF
   ok "ssh config updated"
 fi
 
-if git config --global --get gpg.ssh.program >/dev/null 2>&1; then
+# Written to ~/.gitconfig.local, which the repo's .gitconfig includes. Writing
+# --global here would land in the tracked file instead: phase 8 makes
+# ~/.gitconfig a symlink into the repo, so git would follow it and edit the
+# repo, and rake link would blow these settings away on the next run.
+#
+# Note --includes: with --global, git leaves include directives unread, so
+# without it this assertion never sees what it just wrote.
+GIT_LOCAL="$HOME/.gitconfig.local"
+
+if git config --global --includes --get gpg.ssh.program >/dev/null 2>&1; then
   ok "git signing already configured"
 elif $VERIFY_ONLY; then
   fail "git signing not configured"
 else
-  git config --global gpg.format ssh
-  git config --global gpg.ssh.program "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
-  git config --global commit.gpgsign true
-  ok "git commit signing via 1Password"
+  git config --file "$GIT_LOCAL" gpg.format ssh
+  git config --file "$GIT_LOCAL" gpg.ssh.program \
+    "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+  git config --file "$GIT_LOCAL" commit.gpgsign true
+  ok "git commit signing via 1Password (in ~/.gitconfig.local)"
 fi
 
 # ---------------------------------------------------------------------------
